@@ -26,3 +26,73 @@ button {
 audio {
   margin-top: 20px;
 }
+.page{
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+}
+.output{
+  display: flex;
+  align-items: center;
+}
+
+/* Loader.css */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Ensure it overlays above other content */
+}
+
+.loader {
+  --size-bar: 0.4vmin;
+  display: block;
+  position: relative;
+  width: 6vmin; /* Width for the loader */
+  height: 3vmin; /* Height for the loader */
+}
+
+.loader-bar {
+  height: 3vmin;
+  width: var(--size-bar);
+  background-color: white;
+  animation: loader-5 0.6s cubic-bezier(0, 0, 0.03, 0.9) infinite;
+}
+
+.loader-bar:first-child {
+  left: calc(50% - 1vmin);
+  top: calc(50% - 3vmin);
+}
+
+.loader-bar:last-child {
+  left: calc(50% + 1vmin);
+  top: calc(50% - 1vmin);
+  animation-delay: 0.2s;
+}
+
+@keyframes loader {
+  0%, 88%, 100% {
+    opacity: 0;
+  }
+  
+  0% {
+    transform: translateY(-6vmin);
+  }
+  
+  33% {
+    opacity: 1;
+  }
+  
+  33%, 88% {
+    transform: translateY(3vmin);
+  }
+}

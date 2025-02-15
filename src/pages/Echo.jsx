@@ -1,5 +1,7 @@
 import React, { useState, useRef } from 'react';
 import axios from 'axios';
+import toWav from 'audiobuffer-to-wav';
+import Loader from '../components/Loader';
 
 const Echo = () => {
   const [state, setState] = useState('initial'); // initial, loading, output
@@ -10,6 +12,7 @@ const Echo = () => {
   const [recordedAudio, setRecordedAudio] = useState(null);
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
+  const mediaStreamRef = useRef(null);
 
   // Handle file upload
   const handleFileUpload = (event) => {
@@ -20,13 +23,15 @@ const Echo = () => {
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaStreamRef.current = stream;
       mediaRecorderRef.current = new MediaRecorder(stream);
       mediaRecorderRef.current.ondataavailable = (event) => {
         audioChunksRef.current.push(event.data);
       };
-      mediaRecorderRef.current.onstop = () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
-        setRecordedAudio(audioBlob);
+      mediaRecorderRef.current.onstop = async () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+        const wavBlob = await convertToWav(audioBlob); // Convert to WAV
+        setRecordedAudio(wavBlob);
         audioChunksRef.current = [];
       };
       mediaRecorderRef.current.start();
@@ -38,8 +43,20 @@ const Echo = () => {
 
   // Stop recording
   const stopRecording = () => {
-    mediaRecorderRef.current.stop();
-    setIsRecording(false);
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
+      mediaRecorderRef.current.stop();
+      mediaStreamRef.current.getTracks().forEach(track => track.stop());
+      setIsRecording(false);
+    }
+  };
+
+  // Convert recorded audio to WAV
+  const convertToWav = async (blob) => {
+    const arrayBuffer = await blob.arrayBuffer();
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+    const wav = toWav(audioBuffer);
+    return new Blob([wav], { type: 'audio/wav' });
   };
 
   // Handle echo for both file upload and recorded audio
@@ -84,8 +101,22 @@ const Echo = () => {
     }
   };
 
+  // Reset function to clear all states
+  const resetAll = () => {
+    setState('initial');
+    setAudioFile(null);
+    setOutputAudio(null);
+    setError(null);
+    setIsRecording(false);
+    setRecordedAudio(null);
+    audioChunksRef.current = [];
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
+    }
+  };
+
   return (
-    <div>
+    <div className='page'>
       <h1>Echo Page</h1>
       {state === 'initial' && (
         <div>
@@ -111,10 +142,11 @@ const Echo = () => {
           </button>
         </div>
       )}
-      {state === 'loading' && <p>Loading...</p>}
+      {state === 'loading' && <Loader isVisible={true} />}
       {state === 'output' && (
-        <div>
+        <div className='output'>
           <audio controls autoPlay src={outputAudio} />
+          <button onClick={resetAll}>Try Again</button>
         </div>
       )}
       {error && <p style={{ color: 'red' }}>{error}</p>}
