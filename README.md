@@ -151,5 +151,10 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 - Built with [Create React App](https://github.com/facebook/create-react-app).
 
 ---
+## Live Demo
+
+-You can view the live demo of the project here: [Live Demo Link](https://rdi-echo-service.vercel.app/)
+
+---
 
 Enjoy using the RDI Echo Service! 🚀
