@@ -2,19 +2,7 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-}
-
-nav {
-  background: #333;
-  color: white;
-  padding: 10px;
-  text-align: center;
-}
-
-nav a {
-  color: white;
-  margin: 0 10px;
-  text-decoration: none;
+  height: 100vh;
 }
 
 button {
@@ -26,17 +14,85 @@ button {
 audio {
   margin-top: 20px;
 }
-.page{
+.page {
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 
+  button:not(:has(input)),
+  label.audio {
+    border-radius: 1rem;
+    padding: 18px 10px;
+    font-weight: bold;
+    border: none;
+    background-color: rgb(248, 69, 37);
+    border: 1px solid rgb(248, 69, 37);
+    color: rgb(248, 244, 243);
+    transition: all 200ms ease;
+    &:disabled {
+      opacity: 0.5;
+    }
+    &:hover {
+      color: rgb(248, 69, 37);
+      background-color: rgb(248, 244, 243);
+    }
+  }
+  audio::-webkit-media-controls-panel {
+    background-color: rgb(248, 69, 37);
+    color: rgb(248, 244, 243);    
+  }
+  audio::-webkit-media-controls-current-time-display ,
+  audio::-webkit-media-controls-time-remaining-display,
+  audio::-webkit-media-controls-timeline {
+    color: rgb(248, 244, 243);    
+  }
+  /* Play button */
+audio::-webkit-media-controls-play-button {
+  background-color: rgb(248, 69, 37);
+  color: rgb(248, 244, 243);
 }
-.output{
+
+/* Pause button */
+audio::-webkit-media-controls-pause-button {
+  background-color: rgb(248, 69, 37);
+  color: rgb(248, 244, 243);
+}
+
+/* Progress bar */
+audio::-webkit-media-controls-mute-button,
+audio::-webkit-media-controls-volume-slider {
+  background-color: rgb(248, 69, 37);
+}
+
+/* Progress bar fill */
+audio::-webkit-media-controls-progress-bar {
+  background-color: rgb(248, 244, 243); /* Color of the progress fill */
+}
+
+/* Volume slider */
+audio::-webkit-media-controls-volume-slider {
+  background-color: rgb(248, 244, 243); /* Slider track color */
+}
+
+/* Options menu */
+audio::-webkit-media-controls-volume-slider {
+  color: rgb(248, 244, 243); /* Slider knob color */
+}
+
+  
+}
+.col{
+  display: flex;
+  flex-direction: column;
+}
+.output {
   display: flex;
   align-items: center;
+  audio{
+    margin: auto;
+  }
 }
 
 /* Loader.css */
@@ -80,19 +136,22 @@ audio {
 }
 
 @keyframes loader {
-  0%, 88%, 100% {
+  0%,
+  88%,
+  100% {
     opacity: 0;
   }
-  
+
   0% {
     transform: translateY(-6vmin);
   }
-  
+
   33% {
     opacity: 1;
   }
-  
-  33%, 88% {
+
+  33%,
+  88% {
     transform: translateY(3vmin);
   }
 }

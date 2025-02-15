@@ -1,18 +1,18 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-
+import './Navbar.css'
 const Navbar = () => {
   return (
     <nav>
-      <NavLink to="/" end style={({ isActive }) => ({ color: isActive ? 'yellow' : 'white' })}>
+      <NavLink to="/" end >
         Home
       </NavLink>{' '}
       |{' '}
-      <NavLink to="/about" style={({ isActive }) => ({ color: isActive ? 'yellow' : 'white' })}>
+      <NavLink to="/about">
         About
       </NavLink>{' '}
       |{' '}
-      <NavLink to="/echo" style={({ isActive }) => ({ color: isActive ? 'yellow' : 'white' })}>
+      <NavLink to="/echo">
         Echo
       </NavLink>
     </nav>
